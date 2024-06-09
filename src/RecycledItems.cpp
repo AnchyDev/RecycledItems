@@ -85,6 +85,7 @@ bool RecycledItemsPlayerScript::CanSellItem(Player* player, Item* item, Creature
 
     if (itemProto->ItemLevel < minItemLevel || itemProto->Quality < minQuality)
     {
+        player->SendSellError(SELL_ERR_CANT_SELL_ITEM, creature, item->GetGUID(), 0);
         creature->Whisper("You cannot recycle that item.", GetLanguageForTarget(player), player);
 
         return false;
@@ -94,6 +95,7 @@ bool RecycledItemsPlayerScript::CanSellItem(Player* player, Item* item, Creature
     {
         if (itemProto->Bonding != BIND_WHEN_EQUIPED && itemProto->Bonding != NO_BIND)
         {
+            player->SendSellError(SELL_ERR_CANT_SELL_ITEM, creature, item->GetGUID(), 0);
             creature->Whisper("You can only recycle tradable items.", GetLanguageForTarget(player), player);
 
             return false;
