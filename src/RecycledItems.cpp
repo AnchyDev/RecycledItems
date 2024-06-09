@@ -108,6 +108,13 @@ bool RecycledItemsPlayerScript::CanSellItem(Player* player, Item* item, Creature
     uint32 minItemLevel = sConfigMgr->GetOption<uint32>("RecycledItems.Filter.MinimumItemLevel", 0);
     uint32 minQuality = sConfigMgr->GetOption<uint32>("RecycledItems.Filter.MinimumQuality", ITEM_QUALITY_NORMAL);
 
+    if (itemProto->SellPrice < 1)
+    {
+        player->SendSellError(SELL_ERR_CANT_SELL_ITEM, creature, item->GetGUID(), 0);
+
+        return false;
+    }
+
     if (itemProto->ItemLevel < minItemLevel || itemProto->Quality < minQuality)
     {
         player->SendSellError(SELL_ERR_CANT_SELL_ITEM, creature, item->GetGUID(), 0);
