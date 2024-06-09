@@ -68,7 +68,7 @@ RecycledItems.Filter.MinimumQuality = 1
 #    Type:        bool
 #
 
-RecycledItems.Filter.OnlyTradable = 1
+RecycledItems.Filter.Deleted = 1
 
 #
 #    RecycledItems.Filter.OnlyTradable
