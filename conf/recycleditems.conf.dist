@@ -1,0 +1,124 @@
+#
+# Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license: https://github.com/azerothcore/azerothcore-wotlk/blob/master/LICENSE-AGPL3
+#
+
+[worldserver]
+
+########################################
+# Recycled Items configuration
+########################################
+#
+#    RecycledItems.Enable
+#        Description: Enable/disable item recycling.
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#	 Type:        bool
+#
+
+RecycledItems.Enable = 0
+
+#
+#    RecycledItems.Entry
+#        Description: The entry of the recycler npc.
+#	 Note:        Only change this if you have entry conflicts.
+#	 Default:     888999
+#	 Type:        uint32
+#
+
+RecycledItems.Entry = 888999
+
+#
+#    RecycledItems.UpdateFrequency
+#        Description: How often the server posts the pool of items on the auction house.
+#	 Note:        This is measured in milliseconds.
+#	 Default:     5000
+#	 Type:        uint32
+#
+
+RecycledItems.UpdateFrequency = 5000
+
+#
+#    RecycledItems.Filter.MinimumItemLevel
+#        Description: The minimum item level an item must be to be recycled.
+#	 Default:     1
+#	 Type:        uint32
+#
+
+RecycledItems.Filter.MinimumItemLevel = 1
+
+#
+#    RecycledItems.Filter.MinimumQuality
+#        Description: The minimum quality an item must be to be recycled.
+#		      0 - ITEM_QUALITY_POOR
+#		      1 - ITEM_QUALITY_NORMAL
+#	 Default:     2 - ITEM_QUALITY_UNCOMMON
+#        	      3 - ITEM_QUALITY_RARE
+#                     4 - ITEM_QUALITY_EPIC
+#	              5 - ITEM_QUALITY_LEGENDARY
+#	 Type:        uint32
+#
+
+RecycledItems.Filter.MinimumQuality = 2
+
+#
+#    RecycledItems.Filter.OnlyTradable
+#        Description: Allow only tradable items to be recycles.
+#	 Note:        This avoids issues where high level quest items end up for auction.
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#	 Type:        bool
+#
+
+RecycledItems.Filter.OnlyTradable = 1
+
+#
+#    RecycledItems.Auction.UseOriginalSeller
+#        Description: When an item is recycled it is posted on the auction house on behalf of the player.
+#	 Note:        It is recommended to leave this disabled to prevent auction house abuse.
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#	 Type:        bool
+#
+
+RecyclesItems.Auction.UseOriginalSeller = 0
+
+#
+#    RecycledItems.Auction.SellerGuid
+#        Description: The GUID of the player who will sell/recycle the items in auction house.
+#	 Note:        This is ignored if UseOriginalOwner is enabled.
+#        Default:     0
+#	 Type:        uint64
+#
+
+RecycledItems.Auction.SellerGuid = 0
+
+
+#
+#    RecycledItems.Auction.BidMultiplier
+#        Description: The multiplier for the initial bid cost.
+#	 Note:        Formula is (itemSellAmount * BidMultiplier)
+#        Default:     5
+#	 Type:        uint32
+#
+
+RecycledItems.Auction.BidMultiplier = 5
+
+#
+#    RecycledItems.Auction.BuyoutMultiplier
+#        Description: The multiplier for the buyout cost.
+#	 Note:        Formula is (itemSellAmount * BuyoutMultiplier)
+#        Default:     10
+#	 Type:        uint32
+#
+
+RecycledItems.Auction.BuyoutMultiplier = 10
+
+#
+#    RecycledItems.Vendor.CashMultiplier
+#        Description: Controls how much extra money you get for recycling.
+#	 Note:        Formula is (itemSellAmount + (itemSellAmount / CashMultiplier))
+#        Default:     10
+#	 Type:        uint32
+#
+
+RecycledItems.Vendor.CashMultiplier = 10
