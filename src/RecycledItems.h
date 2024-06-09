@@ -10,6 +10,10 @@ struct RecycleItemInfo {
 };
 std::vector<RecycleItemInfo> itemsToRecycle;
 
+double GetExpMultiplier(uint32 /*itemLevel*/);
+uint32 GetRecycleSaleCost(uint32 /*initialCost*/, uint32 /*itemLevel*/);
+bool IsItemRecylable(Item* /*item*/);
+void RecycleItem(Item* /*item*/, Player* /*player*/);
 void RecycleItems();
 
 class RecycledItemsCreatureScript : public CreatureScript {
@@ -41,10 +45,19 @@ private:
     Language GetLanguageForTarget(Player* /*player*/);
 };
 
+class RecycledItemsItemScript : public AllItemScript
+{
+public:
+    RecycledItemsItemScript() : AllItemScript("RecycledItemsItemScript") { }
+
+private:
+    bool CanItemRemove(Player* /*player*/, Item* /*item*/) override;
+};
+
 class RecycledItemsWorldScript : public WorldScript
 {
 public:
-    RecycledItemsWorldScript() : WorldScript("RecycledItemsWorldScript") { }
+    RecycledItemsWorldScript() : WorldScript("RecycledItemsWorldScript"), counter(0) { }
 
 private:
     void OnUpdate(uint32 /*diff*/) override;

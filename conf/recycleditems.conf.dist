@@ -61,11 +61,21 @@ RecycledItems.Filter.MinimumItemLevel = 0
 RecycledItems.Filter.MinimumQuality = 1
 
 #
+#    RecycledItems.Filter.Deleted
+#    Description: Manually deleted items can also be recycled.
+#                 0 - Disabled
+#    Default:     1 - Enabled
+#    Type:        bool
+#
+
+RecycledItems.Filter.OnlyTradable = 1
+
+#
 #    RecycledItems.Filter.OnlyTradable
-#    Description: Allow only tradable items to be recycles.
+#    Description: Allow only tradable items to be recycled.
 #    Note:        This avoids issues where high level quest items end up for auction.
-#    Default:     0 - Disabled
-#                 1 - Enabled
+#                 0 - Disabled
+#    Default:     1 - Enabled
 #    Type:        bool
 #
 
