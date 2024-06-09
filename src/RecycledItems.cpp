@@ -18,12 +18,23 @@ std::string GetCurrencyStringFromCopper(uint32 copper)
 
     if (gold > 0)
     {
-        ss << Acore::StringFormatFmt("|cffEED044{} gold,|r ", gold);
+        ss << Acore::StringFormatFmt("|cffEED044{} gold", gold);
+    }
+
+    if ((gold > 0 && silver > 0) ||
+        (gold > 0 && copper > 0))
+    {
+        ss << ", |r";
     }
 
     if (silver > 0)
     {
-        ss << Acore::StringFormatFmt("|cffC2BFC2{} silver,|r ", silver);
+        ss << Acore::StringFormatFmt("|cffC2BFC2{} silver", silver);
+    }
+
+    if ((silver > 0 && copper > 0))
+    {
+        ss << ", |r";
     }
 
     if (copper > 0)
