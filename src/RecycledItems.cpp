@@ -11,10 +11,12 @@ double GetExpMultiplier(uint32 itemLevel)
     return 1 + (pow(static_cast<double>(itemLevel) / 300.0, 10) * 100.0);
 }
 
-uint32 GetRecycleSaleCost(uint32 initialCost, uint32 itemLevel)
+uint32 GetRecycleSaleCost(Item* item)
 {
-    return (initialCost * sConfigMgr->GetOption<uint32>("RecycledItems.Auction.BuyoutMultiplier", 10)) // Initial Buyout
-        * GetExpMultiplier(itemLevel); // Exponential Cost
+    auto itemProto = item->GetTemplate();
+
+    return ((itemProto->SellPrice * sConfigMgr->GetOption<uint32>("RecycledItems.Auction.BuyoutMultiplier", 10)) // Initial Buyout
+        * GetExpMultiplier(itemProto->ItemLevel)) * item->GetCount(); // Exponential Cost
 }
 
 void RecycleItems()
@@ -50,7 +52,7 @@ void RecycleItems()
         }
         auctionItem->owner = sellerGuid;
 
-        uint32 saleCost = GetRecycleSaleCost(itemProto->SellPrice, itemProto->ItemLevel);
+        uint32 saleCost = GetRecycleSaleCost(item);
 
         auctionItem->startbid = saleCost / 2;
         auctionItem->bidder = ObjectGuid::Empty;

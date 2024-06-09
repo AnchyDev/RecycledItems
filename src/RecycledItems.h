@@ -11,7 +11,7 @@ struct RecycleItemInfo {
 std::vector<RecycleItemInfo> itemsToRecycle;
 
 double GetExpMultiplier(uint32 /*itemLevel*/);
-uint32 GetRecycleSaleCost(uint32 /*initialCost*/, uint32 /*itemLevel*/);
+uint32 GetRecycleSaleCost(Item* /*item*/);
 bool IsItemRecylable(Item* /*item*/);
 void RecycleItem(Item* /*item*/, Player* /*player*/);
 void RecycleItems();
