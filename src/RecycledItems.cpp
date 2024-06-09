@@ -277,7 +277,7 @@ bool RecycledItemsItemScript::CanItemRemove(Player* player, Item* item)
 
     RecycleItem(item, player);
 
-    ChatHandler(player->GetSession()).SendSysMessage(Acore::StringFormatFmt("|c{0:x}{1} |cffFF0000was deleted and sent to the recycler.|r", ItemQualityColors[itemProto->Quality], itemProto->Name1));
+    ChatHandler(player->GetSession()).SendSysMessage(Acore::StringFormatFmt("|c{0:x}{1} |cffFF0000was deleted and sent to the |cffFFFFFF|Hitem:999888:0:0:0:0:0:0:0:0|h[Recycler]|h|r", ItemQualityColors[itemProto->Quality], itemProto->Name1));
 
     return true;
 }
