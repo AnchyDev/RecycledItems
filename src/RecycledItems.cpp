@@ -163,6 +163,11 @@ bool RecycledItemsCreatureScript::OnGossipHello(Player* player, Creature* creatu
 }
 bool RecycledItemsCreatureScript::OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
 {
+    if (action == 0)
+    {
+        return true;
+    }
+
     ClearGossipMenuFor(player);
 
     switch (action)
@@ -172,6 +177,8 @@ bool RecycledItemsCreatureScript::OnGossipSelect(Player* player, Creature* creat
         break;
 
     case GOSSIP_RECYCLER_ACTION_RECYCLE_HELP:
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, Acore::StringFormatFmt("You will gain {}% more money per sale.", sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 10)), GOSSIP_SENDER_MAIN, 0);
+
         SendGossipMenuFor(player, GOSSIP_RECYCLER_TEXT_HELP, creature);
         break;
     }
