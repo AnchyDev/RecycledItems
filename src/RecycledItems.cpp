@@ -18,6 +18,7 @@ void RecycleItems()
 
     uint32 bidMultiplier = sConfigMgr->GetOption<uint32>("RecycledItems.Auction.BidMultiplier", 5);
     uint32 buyoutMultiplier = sConfigMgr->GetOption<uint32>("RecycledItems.Auction.BuyoutMultiplier", 10);
+    ObjectGuid sellerGuid = ObjectGuid(sConfigMgr->GetOption<uint64>("RecycledItems.Auction.SellerGuid", 0));
 
     uint32 count = 0;
     for (auto itemInfo : itemsToRecycle)
@@ -32,7 +33,6 @@ void RecycleItems()
         auctionItem->item_template = item->GetEntry();
         auctionItem->itemCount = item->GetCount();
 
-        ObjectGuid sellerGuid = ObjectGuid(sConfigMgr->GetOption<uint64>("RecycledItems.Auction.SellerGuid", 0));
         if (sConfigMgr->GetOption<bool>("RecycledItems.Auction.UseOriginalSeller", false))
         {
             sellerGuid = ObjectGuid(itemInfo.owner);
@@ -54,6 +54,31 @@ void RecycleItems()
     }
 
     itemsToRecycle.clear();
+
+    if (sConfigMgr->GetOption<bool>("RecycledItems.Auction.Refresh", true) &&
+        !sConfigMgr->GetOption<bool>("RecycledItems.Auction.UseOriginalSeller", false))
+    {
+        auto& auctions = auctionHouse->GetAuctions();
+
+        for (const auto& auction : auctions)
+        {
+            auto auctionInfo = auction.second;
+
+            // Do not extend auction with active bids (otherwise they wont ever receive the item!!)
+            if (auctionInfo->bidder)
+            {
+                continue;
+            }
+
+            // Only extend server auctions.
+            if (auctionInfo->owner != sellerGuid)
+            {
+                continue;
+            }
+
+            auctionInfo->expire_time = GameTime::GetGameTime().count() + (HOUR * 48);
+        }
+    }
 }
 
 Language RecycledItemsPlayerScript::GetLanguageForTarget(Player* player)
@@ -80,8 +105,8 @@ bool RecycledItemsPlayerScript::CanSellItem(Player* player, Item* item, Creature
 
     auto itemProto = item->GetTemplate();
 
-    uint32 minItemLevel = sConfigMgr->GetOption<uint32>("RecycledItems.Filter.MinimumItemLevel", 1);
-    uint32 minQuality = sConfigMgr->GetOption<uint32>("RecycledItems.Filter.MinimumQuality", ITEM_QUALITY_UNCOMMON);
+    uint32 minItemLevel = sConfigMgr->GetOption<uint32>("RecycledItems.Filter.MinimumItemLevel", 0);
+    uint32 minQuality = sConfigMgr->GetOption<uint32>("RecycledItems.Filter.MinimumQuality", ITEM_QUALITY_NORMAL);
 
     if (itemProto->ItemLevel < minItemLevel || itemProto->Quality < minQuality)
     {
@@ -114,8 +139,6 @@ bool RecycledItemsPlayerScript::CanSellItem(Player* player, Item* item, Creature
 
     uint32 bonusMultiplier = sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 10);
     player->ModifyMoney(itemProto->SellPrice + (itemProto->SellPrice / bonusMultiplier));
-
-    ChatHandler(player->GetSession()).SendSysMessage(Acore::StringFormatFmt("|cff00FF00{}|cffFFFFFF recycled for |cff00FF0010%|cffFFFFFF extra.|r", itemProto->Name1));
 
     return false;
 }
@@ -158,7 +181,7 @@ void RecycledItemsWorldScript::OnUpdate(uint32 diff)
 
     counter += diff;
 
-    uint32 updateFrequency = sConfigMgr->GetOption<uint32>("RecycledItems.UpdateFrequency", 5000);
+    uint32 updateFrequency = sConfigMgr->GetOption<uint32>("RecycledItems.UpdateFrequency", 30000);
 
     if (counter >= updateFrequency)
     {
