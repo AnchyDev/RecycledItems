@@ -10,6 +10,7 @@ struct RecycleItemInfo {
 };
 std::vector<RecycleItemInfo> itemsToRecycle;
 
+std::string GetCurrencyStringFromCopper(uint32 /*copper*/);
 double GetExpMultiplier(uint32 /*itemLevel*/);
 uint32 GetRecycleSaleCost(Item* /*item*/);
 bool IsItemRecylable(Item* /*item*/);

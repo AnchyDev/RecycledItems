@@ -137,9 +137,9 @@ RecycledItems.Auction.BuyoutMultiplier = 10
 #
 #    RecycledItems.Vendor.CashMultiplier
 #    Description: Controls how much extra money you get for recycling.
-#    Note:        Formula is (itemSellAmount + (itemSellAmount / CashMultiplier))
-#    Default:     10
+#    Note:        Formula is (sellPrice * CashMultiplier)
+#    Default:     2
 #    Type:        uint32
 #
 
-RecycledItems.Vendor.CashMultiplier = 10
+RecycledItems.Vendor.CashMultiplier = 2

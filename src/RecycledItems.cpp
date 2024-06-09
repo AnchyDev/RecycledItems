@@ -6,6 +6,34 @@
 #include <Player.h>
 #include <ScriptedGossip.h>
 
+std::string GetCurrencyStringFromCopper(uint32 copper)
+{
+    std::stringstream ss;
+
+    uint32 gold = copper / 10000;
+    copper = copper - (gold * 10000);
+
+    uint32 silver = copper / 100;
+    copper = copper - (silver * 100);
+
+    if (gold > 0)
+    {
+        ss << Acore::StringFormatFmt("|cffEED044{} gold,|r ", gold);
+    }
+
+    if (silver > 0)
+    {
+        ss << Acore::StringFormatFmt("|cffC2BFC2{} silver,|r ", silver);
+    }
+
+    if (copper > 0)
+    {
+        ss << Acore::StringFormatFmt("|cffC5865F{} copper", copper);
+    }
+
+    return ss.str();
+}
+
 double GetExpMultiplier(uint32 itemLevel)
 {
     return 1 + (pow(static_cast<double>(itemLevel) / 300.0, 10) * 100.0);
@@ -185,8 +213,15 @@ bool RecycledItemsPlayerScript::CanSellItem(Player* player, Item* item, Creature
 
     player->RemoveItem(item->GetBagSlot(), item->GetSlot(), true);
 
-    uint32 bonusMultiplier = sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 10);
-    player->ModifyMoney(itemProto->SellPrice + (itemProto->SellPrice / bonusMultiplier));
+    uint32 bonusMultiplier = sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 2);
+    uint32 sellPrice = itemProto->SellPrice * item->GetCount();
+    uint32 money = sellPrice * bonusMultiplier;
+    player->ModifyMoney(money);
+
+    std::string msg = Acore::StringFormatFmt("|cffFFFFFFGained {} |cffFFFFFFfor recycling.|r", GetCurrencyStringFromCopper(money));
+    WorldPacket notifyPacket(SMSG_NOTIFICATION, msg.size() + 1);
+    notifyPacket << msg;
+    player->SendDirectMessage(&notifyPacket);
 
     return false;
 }
@@ -277,7 +312,7 @@ bool RecycledItemsItemScript::CanItemRemove(Player* player, Item* item)
 
     RecycleItem(item, player);
 
-    ChatHandler(player->GetSession()).SendSysMessage(Acore::StringFormatFmt("|c{0:x}{1} |cffFF0000was deleted and sent to the |cffFFFFFF|Hitem:999888:0:0:0:0:0:0:0:0|h[Recycler]|h|r", ItemQualityColors[itemProto->Quality], itemProto->Name1));
+    player->SendSystemMessage(Acore::StringFormatFmt("|c{0:x}{1} |cffFF0000was deleted and sent to the |cffFFFFFF|Hitem:999888:0:0:0:0:0:0:0:0|h[Recycler]|h|r", ItemQualityColors[itemProto->Quality], itemProto->Name1));
 
     return true;
 }
