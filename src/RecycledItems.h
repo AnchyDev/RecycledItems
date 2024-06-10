@@ -43,6 +43,8 @@ public:
 
 private:
     bool CanSellItem(Player* /*player*/, Item* /*item*/, Creature* /*creature*/) override;
+    bool CanCastItemUseSpell(Player* /*player*/, Item* /*item*/, SpellCastTargets const& /*targets*/, uint8 /*cast_count*/, uint32 /*glyphIndex*/) override;
+
     Language GetLanguageForTarget(Player* /*player*/);
 };
 

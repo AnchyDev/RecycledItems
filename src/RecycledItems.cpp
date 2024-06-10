@@ -5,6 +5,7 @@
 #include <GameTime.h>
 #include <Player.h>
 #include <ScriptedGossip.h>
+#include <Spell.h>
 
 std::string GetCurrencyStringFromCopper(uint32 copper)
 {
@@ -171,7 +172,9 @@ bool IsItemRecylable(Item* item)
 
     if (sConfigMgr->GetOption<uint32>("RecycledItems.Filter.OnlyTradable", true))
     {
-        if (itemProto->Bonding != BIND_WHEN_EQUIPED && itemProto->Bonding != NO_BIND)
+        if (itemProto->Bonding != BIND_WHEN_EQUIPED &&
+            itemProto->Bonding != NO_BIND &&
+            itemProto->Bonding != BIND_WHEN_USE)
         {
             return false;
         }
@@ -233,6 +236,69 @@ bool RecycledItemsPlayerScript::CanSellItem(Player* player, Item* item, Creature
     WorldPacket notifyPacket(SMSG_NOTIFICATION, msg.size() + 1);
     notifyPacket << msg;
     player->SendDirectMessage(&notifyPacket);
+
+    return false;
+}
+
+bool RecycledItemsPlayerScript::CanCastItemUseSpell(Player* player, Item* item, SpellCastTargets const& targets, uint8 /*cast_count*/, uint32 /*glyphIndex*/)
+{
+    if (!item)
+    {
+        return true;
+    }
+
+    auto itemProto = item->GetTemplate();
+    if (!itemProto)
+    {
+        return true;
+    }
+
+    if (itemProto->ItemId != 41178)
+    {
+        return true;
+    }
+
+    if (!sConfigMgr->GetOption<bool>("RecycledItems.Enable", false))
+    {
+        player->SendSystemMessage("This item is disabled.");
+        return true;
+    }
+
+    auto targetItem = targets.GetItemTarget();
+    if (!targetItem)
+    {
+        return false;
+    }
+
+    if (targetItem->GetOwner()->GetGUID() != player->GetGUID())
+    {
+        player->SendSystemMessage("You do not own that item.");
+        return false;
+    }
+
+    if (!IsItemRecylable(targetItem))
+    {
+        player->SendSystemMessage("You cannot recycle that item.");
+        return false;
+    }
+
+    RecycleItem(targetItem, player);
+
+    player->DestroyItemCount(itemProto->ItemId, 1, true); // Remote Recycler Item
+    player->RemoveItem(targetItem->GetBagSlot(), targetItem->GetSlot(), true);
+
+    auto targetItemProto = targetItem->GetTemplate();
+
+    uint32 bonusMultiplier = sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 2);
+    uint32 sellPrice = targetItemProto->SellPrice * targetItem->GetCount();
+    uint32 money = sellPrice * bonusMultiplier;
+    player->ModifyMoney(money);
+
+    std::string msg = Acore::StringFormatFmt("|cffFFFFFFGained {} |cffFFFFFFfor recycling.|r", GetCurrencyStringFromCopper(money));
+    WorldPacket notifyPacket(SMSG_NOTIFICATION, msg.size() + 1);
+    notifyPacket << msg;
+    player->SendDirectMessage(&notifyPacket);
+
 
     return false;
 }
