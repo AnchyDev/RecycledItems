@@ -77,7 +77,6 @@ void RecycleItems()
     for (auto itemInfo : itemsToRecycle)
     {
         auto item = Item::CreateItem(itemInfo.entry, itemInfo.count);
-        auto itemProto = item->GetTemplate();
 
         AuctionEntry* auctionItem = new AuctionEntry;
         auctionItem->Id = sObjectMgr->GenerateAuctionID();
