@@ -38,6 +38,16 @@ RecycledItems.Entry = 888999
 RecycledItems.UpdateFrequency = 30000
 
 #
+#    RecycledItems.RefreshFrequency
+#    Description: How often the server refreshes the duration of the items on the auction house.
+#    Note:        Only items that have been posted by the server and have no bid will be refreshed.
+#    Default:     60000
+#    Type:        uint32
+#
+
+RecycledItems.RefreshFrequency = 60000
+
+#
 #    RecycledItems.Filter.MinimumItemLevel
 #    Description: The minimum item level an item must be to be recycled.
 #    Default:     0

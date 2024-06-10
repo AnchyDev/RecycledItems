@@ -16,6 +16,7 @@ uint32 GetRecycleSaleCost(Item* /*item*/);
 bool IsItemRecylable(Item* /*item*/);
 void RecycleItem(Item* /*item*/, Player* /*player*/);
 void RecycleItems();
+void RefreshRecycledItems();
 
 class RecycledItemsCreatureScript : public CreatureScript {
 public:
@@ -61,13 +62,14 @@ private:
 class RecycledItemsWorldScript : public WorldScript
 {
 public:
-    RecycledItemsWorldScript() : WorldScript("RecycledItemsWorldScript"), counter(0) { }
+    RecycledItemsWorldScript() : WorldScript("RecycledItemsWorldScript"), counter(0), refreshCounter(0) { }
 
 private:
     void OnUpdate(uint32 /*diff*/) override;
 
 private:
     uint32 counter;
+    uint32 refreshCounter;
 };
 
 #endif // MODULE_RECYCLED_ITEMS_H

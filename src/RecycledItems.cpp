@@ -109,10 +109,16 @@ void RecycleItems()
     }
 
     itemsToRecycle.clear();
+}
 
+void RefreshRecycledItems()
+{
     if (sConfigMgr->GetOption<bool>("RecycledItems.Auction.Refresh", true) &&
         !sConfigMgr->GetOption<bool>("RecycledItems.Auction.UseOriginalSeller", false))
     {
+        auto auctionHouse = sAuctionMgr->GetAuctionsMapByHouseId(AUCTIONHOUSE_NEUTRAL);
+        ObjectGuid sellerGuid = ObjectGuid(sConfigMgr->GetOption<uint64>("RecycledItems.Auction.SellerGuid", 0));
+
         auto& auctions = auctionHouse->GetAuctions();
 
         for (const auto& auction : auctions)
@@ -362,6 +368,7 @@ void RecycledItemsWorldScript::OnUpdate(uint32 diff)
     }
 
     counter += diff;
+    refreshCounter += diff;
 
     uint32 updateFrequency = sConfigMgr->GetOption<uint32>("RecycledItems.UpdateFrequency", 30000);
 
@@ -370,6 +377,15 @@ void RecycledItemsWorldScript::OnUpdate(uint32 diff)
         counter = 0;
 
         RecycleItems();
+    }
+
+    uint32 refreshFrequency = sConfigMgr->GetOption<uint32>("RecycledItems.RefreshFrequency", 60000);
+
+    if (refreshCounter >= refreshFrequency)
+    {
+        refreshCounter = 0;
+
+        RefreshRecycledItems();
     }
 }
 
