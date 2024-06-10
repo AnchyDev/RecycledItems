@@ -175,7 +175,6 @@ bool IsItemRecylable(Item* item)
         return false;
     }
 
-
     if (sConfigMgr->GetOption<uint32>("RecycledItems.Filter.OnlyTradable", true))
     {
         if (itemProto->Bonding != BIND_WHEN_EQUIPED &&
@@ -304,7 +303,6 @@ bool RecycledItemsPlayerScript::CanCastItemUseSpell(Player* player, Item* item, 
     WorldPacket notifyPacket(SMSG_NOTIFICATION, msg.size() + 1);
     notifyPacket << msg;
     player->SendDirectMessage(&notifyPacket);
-
 
     return false;
 }
