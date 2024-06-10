@@ -143,3 +143,14 @@ RecycledItems.Auction.BuyoutMultiplier = 10
 #
 
 RecycledItems.Vendor.CashMultiplier = 2
+
+#
+#    RecycledItems.Access.AuctionHouse
+#    Description: Allows the player to access the auction house from the recycler.
+#    Note:        This is the neutral auction house.
+#                 0 - Disabled
+#    Default:     1 - Enabled
+#    Type:        bool
+#
+
+RecycledItems.Access.AuctionHouse = 1

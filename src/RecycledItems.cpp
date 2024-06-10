@@ -312,7 +312,13 @@ bool RecycledItemsCreatureScript::OnGossipHello(Player* player, Creature* creatu
 
     ClearGossipMenuFor(player);
 
-    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "I would like to recycle some items.", GOSSIP_SENDER_MAIN, GOSSIP_RECYCLER_ACTION_RECYCLE);
+    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "I would like to recycle some items.", GOSSIP_SENDER_MAIN, GOSSIP_RECYCLER_ACTION_RECYCLE);
+
+    if (sConfigMgr->GetOption<bool>("RecycledItems.Access.AuctionHouse", true))
+    {
+        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "I would like to view the auction house.", GOSSIP_SENDER_MAIN, GOSSIP_RECYCLER_ACTION_AUCTION);
+    }
+
     AddGossipItemFor(player, GOSSIP_ICON_CHAT, "How does this work?", GOSSIP_SENDER_MAIN, GOSSIP_RECYCLER_ACTION_RECYCLE_HELP);
 
     SendGossipMenuFor(player, GOSSIP_RECYCLER_TEXT_HELLO, creature);
@@ -335,9 +341,13 @@ bool RecycledItemsCreatureScript::OnGossipSelect(Player* player, Creature* creat
         break;
 
     case GOSSIP_RECYCLER_ACTION_RECYCLE_HELP:
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, Acore::StringFormatFmt("You will gain {}% more money per sale.", sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 10)), GOSSIP_SENDER_MAIN, 0);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, Acore::StringFormatFmt("Items are worth 200% when vendored here.", sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 10) * 100), GOSSIP_SENDER_MAIN, 0);
 
         SendGossipMenuFor(player, GOSSIP_RECYCLER_TEXT_HELP, creature);
+        break;
+
+    case GOSSIP_RECYCLER_ACTION_AUCTION:
+        player->GetSession()->SendAuctionHello(creature->GetGUID(), creature);
         break;
     }
 
