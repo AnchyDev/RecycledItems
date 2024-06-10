@@ -2,12 +2,13 @@
 This module allows players to recycle items to a robot for extra cash.
 These items are then stored on the auction house so they do not go unwanted.
 
+Recyclers are placed throughout the world. If there is a flight master there is probably a recycler nearby.
+
 ## Setup
 - Clone this repo into your `./azerothcore-wotlk/modules` directory.
 - Re-run cmake.
 - Re-compile your core.
 - Enable/configure the module setting.
-- Spawn the robot in the world somewhere using the entry id in config.
 - Recycle!
 
 ## Contact
