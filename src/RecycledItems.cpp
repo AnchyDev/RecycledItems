@@ -368,7 +368,7 @@ void RecycledItemsWorldScript::OnUpdate(uint32 diff)
     counter += diff;
     refreshCounter += diff;
 
-    uint32 updateFrequency = sConfigMgr->GetOption<uint32>("RecycledItems.UpdateFrequency", 30000);
+    uint32 updateFrequency = sConfigMgr->GetOption<uint32>("RecycledItems.UpdateFrequency", 30) * 1000;
 
     if (counter >= updateFrequency)
     {
@@ -377,7 +377,7 @@ void RecycledItemsWorldScript::OnUpdate(uint32 diff)
         RecycleItems();
     }
 
-    uint32 refreshFrequency = sConfigMgr->GetOption<uint32>("RecycledItems.RefreshFrequency", 60000);
+    uint32 refreshFrequency = sConfigMgr->GetOption<uint32>("RecycledItems.RefreshFrequency", 3600) * 1000;
 
     if (refreshCounter >= refreshFrequency)
     {

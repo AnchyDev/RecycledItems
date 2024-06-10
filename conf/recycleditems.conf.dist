@@ -30,22 +30,21 @@ RecycledItems.Entry = 888999
 #
 #    RecycledItems.UpdateFrequency
 #    Description: How often the server posts the pool of items on the auction house.
-#    Note:        This is measured in milliseconds.
-#    Default:     30000
+#    Default:     30 (seconds)
 #    Type:        uint32
 #
 
-RecycledItems.UpdateFrequency = 30000
+RecycledItems.UpdateFrequency = 30
 
 #
 #    RecycledItems.RefreshFrequency
 #    Description: How often the server refreshes the duration of the items on the auction house.
 #    Note:        Only items that have been posted by the server and have no bid will be refreshed.
-#    Default:     60000
+#    Default:     3600 (seconds) 
 #    Type:        uint32
 #
 
-RecycledItems.RefreshFrequency = 60000
+RecycledItems.RefreshFrequency = 3600
 
 #
 #    RecycledItems.Filter.MinimumItemLevel
