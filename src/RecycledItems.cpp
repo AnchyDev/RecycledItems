@@ -229,7 +229,7 @@ bool RecycledItemsPlayerScript::CanSellItem(Player* player, Item* item, Creature
 
     RecycleItem(item, player);
 
-    player->RemoveItem(item->GetBagSlot(), item->GetSlot(), true);
+    player->DestroyItem(item->GetBagSlot(), item->GetSlot(), true);
 
     uint32 bonusMultiplier = sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 2);
     uint32 sellPrice = itemProto->SellPrice * item->GetCount();
