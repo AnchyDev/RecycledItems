@@ -374,7 +374,7 @@ bool RecycledItemsCreatureScript::OnGossipSelect(Player* player, Creature* creat
         break;
 
     case GOSSIP_RECYCLER_ACTION_RECYCLE_HELP:
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, Acore::StringFormatFmt("Items are worth 200% when vendored here.", sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 10) * 100), GOSSIP_SENDER_MAIN, 0);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, Acore::StringFormatFmt("Items are worth {}% when vendored here.", sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 2) * 100), GOSSIP_SENDER_MAIN, 0);
 
         SendGossipMenuFor(player, GOSSIP_RECYCLER_TEXT_HELP, creature);
         break;
