@@ -7,6 +7,7 @@ struct RecycleItemInfo {
     uint32 entry;
     uint32 count;
     uint64 owner;
+    uint64 guid;
 };
 std::vector<RecycleItemInfo> itemsToRecycle;
 
@@ -14,6 +15,7 @@ std::string GetCurrencyStringFromCopper(uint32 /*copper*/);
 double GetExpMultiplier(uint32 /*itemLevel*/);
 uint32 GetRecycleSaleCost(Item* /*item*/);
 bool IsItemRecylable(Item* /*item*/);
+bool IsAlreadyBeingRecycled(Item* /*item*/);
 void RecycleItem(Item* /*item*/, Player* /*player*/);
 void RecycleItems();
 void RefreshRecycledItems();

@@ -104,6 +104,11 @@ void RecycleItems()
         sAuctionMgr->AddAItem(item);
         auctionHouse->AddAuction(auctionItem);
 
+        auto trans = CharacterDatabase.BeginTransaction();
+        item->SaveToDB(trans);
+        auctionItem->SaveToDB(trans);
+        CharacterDatabase.CommitTransaction(trans);
+
         count++;
     }
 
@@ -148,6 +153,7 @@ void RecycleItem(Item* item, Player* player)
     itemInfo.entry = item->GetEntry();
     itemInfo.count = item->GetCount();
     itemInfo.owner = player->GetGUID().GetRawValue();
+    itemInfo.guid = item->GetGUID().GetRawValue();
 
     itemsToRecycle.push_back(itemInfo);
 }
@@ -185,6 +191,24 @@ bool IsItemRecylable(Item* item)
     }
 
     return true;
+}
+
+bool IsAlreadyBeingRecycled(Item* item)
+{
+    if (!item)
+    {
+        return true;
+    }
+
+    for (auto const& recycleItem : itemsToRecycle)
+    {
+        if (recycleItem.guid == item->GetGUID().GetRawValue())
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 Language RecycledItemsPlayerScript::GetLanguageForTarget(Player* player)
@@ -229,12 +253,12 @@ bool RecycledItemsPlayerScript::CanSellItem(Player* player, Item* item, Creature
 
     RecycleItem(item, player);
 
-    player->DestroyItem(item->GetBagSlot(), item->GetSlot(), true);
-
     uint32 bonusMultiplier = sConfigMgr->GetOption<uint32>("RecycledItems.Vendor.CashMultiplier", 2);
     uint32 sellPrice = itemProto->SellPrice * item->GetCount();
     uint32 money = sellPrice * bonusMultiplier;
     player->ModifyMoney(money);
+
+    player->DestroyItem(item->GetBagSlot(), item->GetSlot(), true);
 
     std::string msg = Acore::StringFormatFmt("|cffFFFFFFGained {} |cffFFFFFFfor recycling.|r", GetCurrencyStringFromCopper(money));
     WorldPacket notifyPacket(SMSG_NOTIFICATION, msg.size() + 1);
@@ -289,7 +313,7 @@ bool RecycledItemsPlayerScript::CanCastItemUseSpell(Player* player, Item* item, 
     RecycleItem(targetItem, player);
 
     player->DestroyItemCount(itemProto->ItemId, 1, true); // Remote Recycler Item
-    player->RemoveItem(targetItem->GetBagSlot(), targetItem->GetSlot(), true);
+    player->DestroyItem(targetItem->GetBagSlot(), targetItem->GetSlot(), true);
 
     auto targetItemProto = targetItem->GetTemplate();
 
@@ -405,6 +429,12 @@ bool RecycledItemsItemScript::CanItemRemove(Player* player, Item* item)
     }
 
     if (!IsItemRecylable(item))
+    {
+        return true;
+    }
+
+    // If the item was sold to the recycler, it is destroyed and triggers this hook.
+    if (IsAlreadyBeingRecycled(item))
     {
         return true;
     }
