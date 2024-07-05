@@ -308,12 +308,13 @@ bool RecycledItemsPlayerScript::CanCastItemUseSpell(Player* player, Item* item, 
 
 bool RecycledItemsCreatureScript::OnGossipHello(Player* player, Creature* creature)
 {
+    ClearGossipMenuFor(player);
+
     if (!sConfigMgr->GetOption<bool>("RecycledItems.Enable", false))
     {
-        return false;
+        SendGossipMenuFor(player, 1, creature);
+        return true;
     }
-
-    ClearGossipMenuFor(player);
 
     AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "I would like to recycle some items.", GOSSIP_SENDER_MAIN, GOSSIP_RECYCLER_ACTION_RECYCLE);
 
