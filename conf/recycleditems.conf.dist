@@ -91,6 +91,16 @@ RecycledItems.Filter.Deleted = 1
 RecycledItems.Filter.OnlyTradable = 1
 
 #
+#    RecycledItems.Filter.PreviouslyTradable
+#    Description: Allow originally Bind on Equip/Use items that are now soulbound to be recycled.
+#                 0 - Disabled
+#    Default:     1 - Enabled
+#    Type:        bool
+#
+
+RecycledItems.Filter.PreviouslyTradable = 1
+
+#
 #    RecycledItems.Auction.Refresh
 #    Description: Refreshes auctions posted by the server with no active bid.
 #    Note:        Only items posted by the server are refreshed, this is ignored with UseOriginalSeller.

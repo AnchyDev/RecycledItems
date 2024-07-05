@@ -180,11 +180,16 @@ bool IsItemRecylable(Item* item)
         return false;
     }
 
-    if (sConfigMgr->GetOption<uint32>("RecycledItems.Filter.OnlyTradable", true))
+    if (sConfigMgr->GetOption<bool>("RecycledItems.Filter.OnlyTradable", true))
     {
         if (itemProto->Bonding != BIND_WHEN_EQUIPED &&
             itemProto->Bonding != NO_BIND &&
             itemProto->Bonding != BIND_WHEN_USE)
+        {
+            return false;
+        }
+
+        if (!sConfigMgr->GetOption<bool>("RecycledItems.Filter.PreviouslyTradable", true) && item->IsSoulBound())
         {
             return false;
         }
