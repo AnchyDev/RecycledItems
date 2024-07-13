@@ -318,7 +318,6 @@ bool RecycledItemsPlayerScript::CanCastItemUseSpell(Player* player, Item* item, 
     RecycleItem(targetItem, player);
 
     player->DestroyItemCount(itemProto->ItemId, 1, true); // Remote Recycler Item
-    player->DestroyItem(targetItem->GetBagSlot(), targetItem->GetSlot(), true);
 
     auto targetItemProto = targetItem->GetTemplate();
 
@@ -326,6 +325,8 @@ bool RecycledItemsPlayerScript::CanCastItemUseSpell(Player* player, Item* item, 
     uint32 sellPrice = targetItemProto->SellPrice * targetItem->GetCount();
     uint32 money = sellPrice * bonusMultiplier;
     player->ModifyMoney(money);
+
+    player->DestroyItem(targetItem->GetBagSlot(), targetItem->GetSlot(), true);
 
     std::string msg = Acore::StringFormatFmt("|cffFFFFFFGained {} |cffFFFFFFfor recycling.|r", GetCurrencyStringFromCopper(money));
     WorldPacket notifyPacket(SMSG_NOTIFICATION, msg.size() + 1);
