@@ -153,7 +153,6 @@ void RecycleItem(Item* item, Player* player)
     itemInfo.entry = item->GetEntry();
     itemInfo.count = item->GetCount();
     itemInfo.owner = player->GetGUID().GetRawValue();
-    itemInfo.guid = item->GetGUID().GetRawValue();
 
     itemsToRecycle.push_back(itemInfo);
 }
@@ -196,24 +195,6 @@ bool IsItemRecylable(Item* item)
     }
 
     return true;
-}
-
-bool IsAlreadyBeingRecycled(Item* item)
-{
-    if (!item)
-    {
-        return true;
-    }
-
-    for (auto const& recycleItem : itemsToRecycle)
-    {
-        if (recycleItem.guid == item->GetGUID().GetRawValue())
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 Language RecycledItemsPlayerScript::GetLanguageForTarget(Player* player)
@@ -417,47 +398,9 @@ void RecycledItemsWorldScript::OnUpdate(uint32 diff)
     }
 }
 
-bool RecycledItemsItemScript::CanItemRemove(Player* player, Item* item)
-{
-    if (!sConfigMgr->GetOption<bool>("RecycledItems.Enable", false))
-    {
-        return true;
-    }
-
-    if (!sConfigMgr->GetOption<bool>("RecycledItems.Filter.Deleted", true))
-    {
-        return true;
-    }
-
-    if (!player || !item)
-    {
-        return true;
-    }
-
-    if (!IsItemRecylable(item))
-    {
-        return true;
-    }
-
-    // If the item was sold to the recycler, it is destroyed and triggers this hook.
-    if (IsAlreadyBeingRecycled(item))
-    {
-        return true;
-    }
-
-    auto itemProto = item->GetTemplate();
-
-    RecycleItem(item, player);
-
-    player->SendSystemMessage(Acore::StringFormatFmt("|c{0:x}{1} |cffFF0000was deleted and sent to the |cffFFFFFF|Hitem:999888:0:0:0:0:0:0:0:0|h[Recycler]|h|r", ItemQualityColors[itemProto->Quality], itemProto->Name1));
-
-    return true;
-}
-
 void SC_AddRecycledItemsScripts()
 {
     new RecycledItemsWorldScript();
     new RecycledItemsCreatureScript();
     new RecycledItemsPlayerScript();
-    new RecycledItemsItemScript();
 }

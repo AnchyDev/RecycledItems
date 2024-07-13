@@ -7,7 +7,6 @@ struct RecycleItemInfo {
     uint32 entry;
     uint32 count;
     uint64 owner;
-    uint64 guid;
 };
 std::vector<RecycleItemInfo> itemsToRecycle;
 
@@ -15,7 +14,6 @@ std::string GetCurrencyStringFromCopper(uint32 /*copper*/);
 double GetExpMultiplier(uint32 /*itemLevel*/);
 uint32 GetRecycleSaleCost(Item* /*item*/);
 bool IsItemRecylable(Item* /*item*/);
-bool IsAlreadyBeingRecycled(Item* /*item*/);
 void RecycleItem(Item* /*item*/, Player* /*player*/);
 void RecycleItems();
 void RefreshRecycledItems();
@@ -50,15 +48,6 @@ private:
     bool CanCastItemUseSpell(Player* /*player*/, Item* /*item*/, SpellCastTargets const& /*targets*/, uint8 /*cast_count*/, uint32 /*glyphIndex*/) override;
 
     Language GetLanguageForTarget(Player* /*player*/);
-};
-
-class RecycledItemsItemScript : public AllItemScript
-{
-public:
-    RecycledItemsItemScript() : AllItemScript("RecycledItemsItemScript") { }
-
-private:
-    bool CanItemRemove(Player* /*player*/, Item* /*item*/) override;
 };
 
 class RecycledItemsWorldScript : public WorldScript
